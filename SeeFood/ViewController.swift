@@ -9,6 +9,7 @@
 import UIKit
 import CoreML
 import Vision
+import ChameleonFramework
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -50,12 +51,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             if let firstResult = results.first {
                 if firstResult.identifier.contains("hotdog") {
-                    self.navigationItem.title = "Hotdog!"
-                    self.navigationController?.navigationBar.barTintColor = UIColor.green
+                    self.updateNavBar(withHexcode: FlatGreen().hexValue(), withId: "Hotdog!")
                 }
                 else {
-                    self.navigationItem.title = "Not Hotdog!"
-                    self.navigationController?.navigationBar.barTintColor = UIColor.red
+                    self.updateNavBar(withHexcode: FlatRed().hexValue(), withId: "Not Hotdog!")
                 }
             }
         }
@@ -72,8 +71,28 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     @IBAction func cameraTapped(_ sender: UIBarButtonItem) {
     
-        
         present(imagePicker, animated: true, completion: nil)
+        
+    }
+    
+    // MARK - Nav Bar Setup Methods
+    
+    func updateNavBar(withHexcode colorHexCode:String, withId id:String) {
+        
+        guard let navBar = navigationController?.navigationBar else {fatalError("Navigation Controller does not exist.")}
+        
+        guard let navBarColor = UIColor(hexString: colorHexCode) else {fatalError()}
+        
+        navigationItem.title = id
+        
+        navBar.barTintColor = navBarColor
+        
+        //navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+        navBar.tintColor = UIColor.black
+    
+        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : UIFont.systemFont(ofSize: 25)]
+        
+        
         
     }
     
